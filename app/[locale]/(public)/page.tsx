@@ -98,8 +98,7 @@ export default async function VpemHomepage({
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
-            {categories.map((cat, index) => (
-              {/* ĐÃ CẬP NHẬT: Khối Category có thể click được (bọc Link) */}
+            {categories.map((cat, index) => (             
               <Link href={cat.link} key={index} className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm hover:shadow-xl transition-all cursor-pointer group flex flex-col items-center text-center">
                 <div className="text-gray-400 group-hover:text-blue-600 group-hover:scale-110 transition-transform duration-300 mb-4">
                   {cat.icon}
