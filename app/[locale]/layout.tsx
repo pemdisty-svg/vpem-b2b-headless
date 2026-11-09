@@ -3,8 +3,7 @@ import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
 import { Metadata } from 'next';
 
-// 1. ĐÃ SỬA: Dùng đường dẫn tương đối để đảm bảo 100% nhận diện được CSS
-import "../globals.css"; 
+import "../../globals.css";
 
 import VpemHeader from '../../components/layout/VpemHeader'; 
 import VpemFooter from '../../components/layout/VpemFooter'; 
