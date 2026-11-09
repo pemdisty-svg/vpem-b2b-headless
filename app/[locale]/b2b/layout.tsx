@@ -1,12 +1,12 @@
-import AuthProvider from '../../components/AuthProvider';
+import AuthProvider from '../../../components/AuthProvider';
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
 import "../globals.css"; 
 import { Metadata } from 'next';
 
-import VpemHeader from '../../components/layout/VpemHeader'; 
-import VpemFooter from '../../components/layout/VpemFooter'; 
-import QuoteCartDrawer from '../../components/cart/QuoteCartDrawer';
+import VpemHeader from '../../../components/layout/VpemHeader'; 
+import VpemFooter from '../../../components/layout/VpemFooter'; 
+import QuoteCartDrawer from '../../../components/cart/QuoteCartDrawer';
 
 // THIẾT LẬP METADATA TOÀN CỤC CHO WEBSITE
 export const metadata: Metadata = {
