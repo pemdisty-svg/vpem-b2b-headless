@@ -1,0 +1,58 @@
+{
+  "Header": {
+    "nav_about": "VỀ VPEM",
+    "nav_services": "HOẠT ĐỘNG KINH DOANH",
+    "nav_brands": "SẢN PHẨM",
+    "partner_portal": "Chuyên trang B2B"
+  },
+  "Footer": {
+    "desc": "VPEM Distribution là nhà phân phối chính thức các thiết bị công nghệ...",
+    "support": "Hỗ Trợ Khách Hàng",
+    "connect": "Kết Nối Với VPEM",
+    "copyright": "© 2024 Copyright vpem.vn. All rights reserved.",
+    "order_guide": "Hướng dẫn đặt hàng",
+    "warranty_policy": "Chính sách bảo hành",
+    "privacy_policy": "Chính sách quyền riêng tư"
+  },
+  "Homepage": {
+    "hero_subtitle": "Công ty phân phối công nghệ hàng đầu",
+    "hero_title_1": "KINH DOANH HIỆU QUẢ",
+    "hero_title_2": "PHÁT TRIỂN BỀN VỮNG",
+    "hero_btn": "TÌM HIỂU THÊM",
+    "trust_1_title": "100% Chính Hãng",
+    "trust_1_desc": "Bảo hành ủy quyền Dell, MSI",
+    "trust_2_title": "Giao Hàng Miễn Phí",
+    "trust_2_desc": "Áp dụng cho mọi đơn hàng dự án",
+    "trust_3_title": "Đổi Trả Dễ Dàng",
+    "trust_3_desc": "Thủ tục RMA nhanh gọn qua API",
+    "cat_section_title": "Ngành Hàng Phân Phối",
+    "cat_section_desc": "Khám phá hệ sinh thái sản phẩm công nghệ cao tại VPEM",
+    "cat_view_all": "Xem tất cả",
+    "cat_laptop": "Laptop & MacBook",
+    "cat_pc": "PC & Workstation",
+    "cat_monitor": "Màn hình AI",
+    "cat_accessories": "Phụ kiện Công nghệ",
+    "cat_camera": "Solar Camera"
+  },
+  "Products": {
+    "page_title": "Danh Mục Sản Phẩm",
+    "page_desc": "Hệ sinh thái phân phối thiết bị công nghệ chính hãng tại VPEM",
+    "filter_btn": "Lọc sản phẩm",
+    "rma_ready": "Hỗ trợ RMA",
+    "contact_b2b_price": "Liên hệ giá dự án",
+    "view_detail": "Xem chi tiết"
+  },
+  "ProductDetail": {
+    "home": "Trang chủ",
+    "products": "Sản phẩm",
+    "rma_support": "Hỗ trợ RMA nhanh",
+    "msrp": "Giá bán lẻ đề xuất",
+    "b2b_price": "Giá dự án (B2B)",
+    "contact_buy": "LIÊN HỆ ĐẶT HÀNG",
+    "specs_title": "Thông Số Kỹ Thuật Chi Tiết",
+    "docs_support": "Tài liệu & Chế độ bảo hành",
+    "warranty": "Thời hạn bảo hành",
+    "download_datasheet": "Tải Datasheet sản phẩm",
+    "download_manual": "Tải Hướng dẫn sử dụng"
+  }
+}

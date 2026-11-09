@@ -1,0 +1,58 @@
+{
+  "Header": {
+    "nav_about": "ABOUT US",
+    "nav_services": "SERVICES",
+    "nav_brands": "PRODUCTS",
+    "partner_portal": "B2B Portal"
+  },
+  "Footer": {
+    "desc": "VPEM Distribution is the official distributor of technology devices...",
+    "support": "Customer Support",
+    "connect": "Connect With VPEM",
+    "copyright": "© 2024 Copyright vpem.vn. All rights reserved.",
+    "order_guide": "Ordering Guide",
+    "warranty_policy": "Warranty Policy",
+    "privacy_policy": "Privacy Policy"
+  },
+  "Homepage": {
+    "hero_subtitle": "Leading Technology Distributor",
+    "hero_title_1": "EFFICIENT BUSINESS",
+    "hero_title_2": "SUSTAINABLE GROWTH",
+    "hero_btn": "LEARN MORE",
+    "trust_1_title": "100% Genuine",
+    "trust_1_desc": "Authorized warranty Dell, MSI",
+    "trust_2_title": "Free Shipping",
+    "trust_2_desc": "Applies to all project orders",
+    "trust_3_title": "Easy Returns",
+    "trust_3_desc": "Fast RMA procedure via API",
+    "cat_section_title": "Product Categories",
+    "cat_section_desc": "Explore the high-tech product ecosystem at VPEM",
+    "cat_view_all": "View all",
+    "cat_laptop": "Laptop & MacBook",
+    "cat_pc": "PC & Workstation",
+    "cat_monitor": "AI Monitors",
+    "cat_accessories": "Tech Accessories",
+    "cat_camera": "Solar Camera"
+  },
+  "Products": {
+    "page_title": "Products Category",
+    "page_desc": "Genuine technology distribution ecosystem at VPEM",
+    "filter_btn": "Filter Products",
+    "rma_ready": "RMA Ready",
+    "contact_b2b_price": "Contact for B2B Price",
+    "view_detail": "View Details"
+  },
+  "ProductDetail": {
+    "home": "Home",
+    "products": "Products",
+    "rma_support": "Fast RMA Support",
+    "msrp": "MSRP",
+    "b2b_price": "B2B Project Price",
+    "contact_buy": "CONTACT TO ORDER",
+    "specs_title": "Detailed Technical Specifications",
+    "docs_support": "Documents & Warranty",
+    "warranty": "Warranty Period",
+    "download_datasheet": "Download Product Datasheet",
+    "download_manual": "Download User Manual"
+  }
+}
