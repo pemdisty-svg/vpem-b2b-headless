@@ -80,18 +80,18 @@ export default function LoginPage() {
           {error && <p className="text-red-600 text-xs">{error}</p>}
 
           <div className="flex justify-end">
-            <a href="#" className="text-xs font-bold text-gray-800 hover:underline">
+            <a href="`/${locale}/forgot-password`" className="text-xs font-bold text-gray-800 hover:underline">
               {locale === 'vi' ? 'Quên mật khẩu?' : 'Forgot password?'}
             </a>
           </div>
 
           <div className="text-center text-xs text-gray-500 my-6 leading-relaxed">
             {locale === 'vi' ? 'Trang web này áp dụng ' : 'This site applies '}
-            <a href="#" className="underline font-medium text-gray-700 hover:text-black">
+            <a href="`/${locale}/forgot-password`" className="underline font-medium text-gray-700 hover:text-black">
               {locale === 'vi' ? 'Chính sách Quyền riêng tư' : 'Privacy Policy'}
             </a>
             {locale === 'vi' ? ' và ' : ' and '}
-            <a href="#" className="underline font-medium text-gray-700 hover:text-black">
+            <a href="`/${locale}/forgot-password`" className="underline font-medium text-gray-700 hover:text-black">
               {locale === 'vi' ? 'Điều khoản Dịch vụ' : 'Terms of Service'}
             </a>.
           </div>
