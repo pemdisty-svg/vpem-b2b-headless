@@ -39,7 +39,8 @@ export default function RegisterPage() {
 
     try {
       // Gọi API đăng ký tài khoản (Cần đảm bảo Backend có endpoint này)
-      const res = await fetch(`${process.env.NEXT_PUBLIC_WORDPRESS_API_URL || ''}/wp-json/vpem/v1/register`, {
+      const baseUrl = (process.env.NEXT_PUBLIC_WORDPRESS_API_URL || '').replace('/graphql', '');
+      const res = await fetch(`${baseUrl}/wp-json/vpem/v1/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
