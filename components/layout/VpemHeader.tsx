@@ -13,7 +13,7 @@ export default function VpemHeader() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
   
-  // ĐÃ THÊM: State để lưu trữ từ khóa tìm kiếm
+  // State để lưu trữ từ khóa tìm kiếm
   const [searchQuery, setSearchQuery] = useState('');
   
   const locale = useLocale();
@@ -44,12 +44,12 @@ export default function VpemHeader() {
     router.refresh();
   };
 
-  // ĐÃ THÊM: Hàm xử lý sự kiện Tìm kiếm
+  // Hàm xử lý sự kiện Tìm kiếm
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchQuery.trim()) {
-      // Chuyển hướng sang trang Products và truyền từ khóa vào URL
       router.push(`/${locale}/products?search=${encodeURIComponent(searchQuery.trim())}`);
+      setIsMobileMenuOpen(false); // Đóng menu mobile khi tìm kiếm
     }
   };
 
@@ -57,14 +57,16 @@ export default function VpemHeader() {
 
   return (
     <header className="sticky top-0 left-0 w-full z-50 font-sans bg-white shadow-sm border-b border-gray-100">
-      <div className="max-w-7xl mx-auto px-4 md:px-8 flex justify-between items-center py-2">
+      <div className="max-w-7xl mx-auto px-4 md:px-8 flex justify-between items-center py-2 relative">
         
-        <button className="md:hidden text-pem-dark" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
+        {/* Nút Toggle Menu cho Mobile */}
+        <button className="md:hidden text-pem-dark z-50 relative" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
           {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
         </button>
 
-        <div className="cursor-pointer flex-shrink-0 mr-8">
-           <Link href={`/${locale}`}>
+        {/* Logo */}
+        <div className="cursor-pointer flex-shrink-0 mr-8 z-50 relative">
+           <Link href={`/${locale}`} onClick={() => setIsMobileMenuOpen(false)}>
              <Image 
                 src="/logo.png" 
                 alt="VPEM Logo" 
@@ -77,8 +79,7 @@ export default function VpemHeader() {
            </Link>
         </div>
 
-        {/* ĐÃ CẬP NHẬT: Gắn Link thực tế cho 3 phân hệ chính */}
-        {/* ĐÃ CẬP NHẬT: Gắn Link thực tế cho các phân hệ */}
+        {/* MENU DESKTOP: Điều hướng */}
         <nav className="hidden md:flex flex-1 justify-center items-center gap-4 lg:gap-6 text-[11px] font-bold uppercase tracking-wider text-pem-dark">
           <Link href={`/${locale}/about`} className="hover:text-pem-orange transition">
             {t('nav_about')}
@@ -89,19 +90,17 @@ export default function VpemHeader() {
           <Link href={`/${locale}/products`} className="hover:text-pem-orange transition">
             {locale === 'vi' ? 'Sản phẩm' : 'Products'}
           </Link>
-          {/* ĐÃ THÊM: Link đến trang Blog/Tin tức */}
           <Link href={`/${locale}/blog`} className="hover:text-pem-orange transition">
              {locale === 'vi' ? 'Tin Công Nghệ' : 'Tech News'}
           </Link>
-          {/* ĐÃ THÊM: Link đến trang Liên hệ */}
           <Link href={`/${locale}/contact`} className="hover:text-pem-orange transition">
              {locale === 'vi' ? 'Liên Hệ' : 'Contact Us'}
           </Link>
         </nav>
         
+        {/* MENU DESKTOP: Tiện ích */}
         <div className="hidden md:flex items-center ml-4 gap-4 text-pem-dark">
-          
-          {/* ĐÃ CẬP NHẬT: Kích hoạt Form Tìm kiếm */}
+          {/* Form Tìm kiếm */}
           <form 
             onSubmit={handleSearch}
             className="relative group flex items-center border border-gray-300 rounded-full px-3 py-1 bg-gray-50 focus-within:border-pem-green transition-all w-48"
@@ -118,7 +117,7 @@ export default function VpemHeader() {
             </button>
           </form>
 
-          {/* Bộ chuyển ngôn ngữ */}
+          {/* Bộ chuyển ngôn ngữ Desktop */}
           <div className="flex items-center gap-1 text-[11px] font-bold text-gray-500 ml-2">
             <Globe size={14} className="mr-1 text-gray-400"/>
             <button 
@@ -137,6 +136,7 @@ export default function VpemHeader() {
           </div>
 
           <div className="flex items-center ml-2 border-l border-gray-200 pl-4 gap-5">
+            {/* Giỏ hàng */}
             {mounted && session && isShoppingPage && (
               <button 
                 onClick={() => toggleCart(true)}
@@ -151,6 +151,7 @@ export default function VpemHeader() {
               </button>
             )}
 
+            {/* Tài khoản User Desktop */}
             {session ? (
               <div className="flex items-center gap-3 group relative cursor-pointer z-50 py-2">
                 <div className="w-7 h-7 bg-pem-orange text-white rounded-full flex items-center justify-center font-bold text-xs shadow-sm">
@@ -188,6 +189,102 @@ export default function VpemHeader() {
               </Link>
             )}
           </div>
+        </div>
+      </div>
+
+      {/* ========================================= */}
+      {/* KHỐI GIAO DIỆN MOBILE (OVERLAY MENU) */}
+      {/* ========================================= */}
+      <div 
+        className={`md:hidden fixed inset-0 bg-white z-40 transition-transform duration-300 ease-in-out flex flex-col pt-20 px-6 ${
+          isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'
+        }`}
+      >
+        {/* Form Tìm kiếm Mobile */}
+        <form onSubmit={handleSearch} className="relative w-full mb-8">
+          <input 
+            type="text" 
+            placeholder={locale === 'vi' ? 'Tìm kiếm...' : 'Search...'}
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full bg-gray-50 border border-gray-200 rounded-lg py-3 px-4 text-sm focus:outline-none focus:border-pem-green"
+          />
+          <button type="submit" className="absolute right-3 top-3 text-gray-400">
+            <Search size={18} />
+          </button>
+        </form>
+
+        {/* Danh sách link điều hướng Mobile */}
+        <nav className="flex flex-col space-y-6 text-lg font-bold text-gray-800 uppercase tracking-wide border-b border-gray-100 pb-8">
+          <Link href={`/${locale}/about`} onClick={() => setIsMobileMenuOpen(false)}>{t('nav_about')}</Link>
+          <Link href={`/${locale}/services`} onClick={() => setIsMobileMenuOpen(false)}>{t('nav_services')}</Link>
+          <Link href={`/${locale}/products`} onClick={() => setIsMobileMenuOpen(false)}>{locale === 'vi' ? 'Sản phẩm' : 'Products'}</Link>
+          <Link href={`/${locale}/blog`} onClick={() => setIsMobileMenuOpen(false)}>{locale === 'vi' ? 'Tin Công Nghệ' : 'Tech News'}</Link>
+          <Link href={`/${locale}/contact`} onClick={() => setIsMobileMenuOpen(false)}>{locale === 'vi' ? 'Liên Hệ' : 'Contact Us'}</Link>
+        </nav>
+
+        {/* Tiện ích Mobile: Ngôn ngữ & Tài khoản */}
+        <div className="flex flex-col mt-8 space-y-6">
+          {/* Bộ chọn ngôn ngữ */}
+          <div className="flex items-center space-x-3 text-gray-600">
+            <Globe size={20} />
+            <div className="flex space-x-3 font-medium text-sm">
+              <button 
+                onClick={() => { switchLanguage('vi'); setIsMobileMenuOpen(false); }}
+                className={locale === 'vi' ? 'text-pem-orange font-bold' : ''}
+              >
+                Tiếng Việt (VN)
+              </button>
+              <span className="text-gray-300">|</span>
+              <button 
+                onClick={() => { switchLanguage('en'); setIsMobileMenuOpen(false); }}
+                className={locale === 'en' ? 'text-pem-orange font-bold' : ''}
+              >
+                English (EN)
+              </button>
+            </div>
+          </div>
+
+          {/* User Account / Login */}
+          {mounted && session ? (
+            <div className="flex flex-col space-y-4">
+              <div className="flex items-center space-x-3 text-gray-800">
+                <div className="w-8 h-8 bg-pem-orange text-white rounded-full flex items-center justify-center font-bold text-sm">
+                  {session.user?.name?.charAt(0).toUpperCase() || 'U'}
+                </div>
+                <div className="flex flex-col">
+                  <span className="font-bold text-sm">{session.user?.name}</span>
+                  <span className="text-xs text-gray-500">Role: {(session.user as any)?.role}</span>
+                </div>
+              </div>
+              
+              <Link 
+                href={`/${locale}/dashboard`} 
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="flex items-center space-x-3 text-gray-600 font-medium py-2"
+              >
+                <LayoutDashboard size={20} />
+                <span>{locale === 'vi' ? 'Bảng điều khiển' : 'Dashboard'}</span>
+              </Link>
+              
+              <button 
+                onClick={() => { signOut({ callbackUrl: `/${locale}` }); setIsMobileMenuOpen(false); }}
+                className="flex items-center space-x-3 text-red-500 font-medium py-2 text-left"
+              >
+                <LogOut size={20} />
+                <span>{locale === 'vi' ? 'Đăng xuất' : 'Log out'}</span>
+              </button>
+            </div>
+          ) : (
+            <Link 
+              href={`/${locale}/login`} 
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="flex items-center space-x-3 text-gray-800 font-medium bg-gray-50 p-3 rounded-lg"
+            >
+              <User size={20} />
+              <span>{locale === 'vi' ? 'Đăng nhập B2B' : 'B2B Login'}</span>
+            </Link>
+          )}
         </div>
       </div>
     </header>
