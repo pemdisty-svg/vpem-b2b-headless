@@ -60,7 +60,7 @@ export default function ContactPage() {
             </p>
             <p className="flex items-center gap-4">
               <Mail className="text-pem-red shrink-0" size={24} />
-              <span>cskh@vpem.vn</span>
+              <span>info@vpem.vn</span>
             </p>
           </div>
         </div>

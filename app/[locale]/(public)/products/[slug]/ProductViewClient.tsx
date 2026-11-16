@@ -2,11 +2,9 @@
 
 import React, { useState, useEffect } from 'react';
 import { useTranslations } from 'next-intl';
-import { ShieldCheck, Download, CheckCircle, FileText, ChevronRight, X, Send, PlayCircle, ShoppingBag } from 'lucide-react';
+import { ShieldCheck, Download, CheckCircle, FileText, ChevronRight, X, Send, PlayCircle, ShoppingBag, Link2 } from 'lucide-react';
 import Link from 'next/link';
 import { useSession } from 'next-auth/react';
-
-// ĐÃ THÊM: Import Store Quản lý Giỏ hàng
 import { useCartStore } from '../../../../../lib/store/useCartStore';
 
 export interface ProductDetailType {
@@ -44,14 +42,11 @@ export default function ProductViewClient({
 }) {
   const t = useTranslations('ProductDetail');
   const { data: session } = useSession();
-  
-  // ĐÃ THÊM: Khởi tạo các hàm của Giỏ hàng
   const { addItem, toggleCart } = useCartStore();
   
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [formData, setFormData] = useState({ name: '', company: '', phone: '', email: '', note: '' });
-
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   useEffect(() => {
@@ -66,6 +61,14 @@ export default function ProductViewClient({
     e.preventDefault();
     console.log("Gửi yêu cầu B2B tới cskh@vpem.vn:", { product: product.title, ...formData });
     setFormSubmitted(true);
+  };
+
+  const shareUrl = typeof window !== 'undefined' ? window.location.href : '';
+  const shareToFacebook = () => window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`, '_blank');
+  const shareToTwitter = () => window.open(`https://twitter.com/intent/tweet?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(product.title)}`, '_blank');
+  const copyLink = () => {
+    navigator.clipboard.writeText(shareUrl);
+    alert(locale === 'vi' ? 'Đã sao chép đường dẫn sản phẩm!' : 'Product link copied!');
   };
 
   return (
@@ -83,7 +86,6 @@ export default function ProductViewClient({
       </div>
 
       <div className="max-w-7xl mx-auto px-4 md:px-8">
-        
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start mb-16">
           
           {/* CỘT TRÁI: SLIDER HÌNH ẢNH */}
@@ -117,35 +119,51 @@ export default function ProductViewClient({
           </div>
 
           {/* CỘT PHẢI: NỘI DUNG SẢN PHẨM */}
-          <div className="lg:col-span-7 flex flex-col space-y-8">
+          <div className="lg:col-span-7 flex flex-col space-y-5">
             
-            <div className="bg-white rounded-2xl p-8 border border-gray-100 shadow-sm">
+            <div className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
               <div className="flex items-center gap-3 mb-4">
                 <span className="text-[11px] font-extrabold text-white bg-pem-dark px-2.5 py-0.5 rounded uppercase tracking-wider">{product.brand}</span>
                 <span className="text-[11px] text-gray-500 bg-gray-100 px-2.5 py-0.5 rounded">SKU: {product.sku}</span>
               </div>
               
-              <h1 className="text-2xl md:text-3xl font-extrabold text-gray-900 mb-6 leading-tight">{product.title}</h1>
+              <h1 className="text-2xl md:text-3xl font-extrabold text-gray-900 mb-4 leading-tight">{product.title}</h1>
               
               {product.tech_specs ? (
                 <div 
-                  className="prose prose-sm max-w-none text-gray-600 border-t border-gray-100 pt-6"
+                  className="prose prose-sm max-w-none text-gray-600 border-t border-gray-100 pt-4"
                   dangerouslySetInnerHTML={{ __html: product.tech_specs }} 
                 />
               ) : (
-                <div className="text-sm text-gray-500 italic border-t border-gray-100 pt-6">
+                <div className="text-sm text-gray-500 italic border-t border-gray-100 pt-4">
                   {locale === 'vi' ? 'Đang cập nhật cấu hình kỹ thuật.' : 'Technical specifications are being updated.'}
                 </div>
               )}
             </div>
 
-            <div className="bg-white rounded-2xl p-8 border border-gray-100 shadow-sm">
-              <div className="flex items-center gap-2 mb-6">
-                <CheckCircle className="text-blue-600" size={18} />
-                <span className="text-sm font-semibold text-blue-700">{product.stock_status}</span>
+            <div className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
+              <div className="flex items-center justify-between mb-4 border-b border-gray-100 pb-4">
+                <div className="flex items-center gap-2">
+                  <CheckCircle className="text-blue-600" size={18} />
+                  <span className="text-sm font-semibold text-blue-700">{product.stock_status}</span>
+                </div>
+                
+                {/* Cụm Share dùng SVG chuẩn */}
+                <div className="flex items-center gap-4">
+                  <span className="text-xs text-gray-400 font-medium">{locale === 'vi' ? 'Chia sẻ:' : 'Share:'}</span>
+                  <button onClick={shareToFacebook} className="text-gray-400 hover:text-blue-600 transition" title="Share to Facebook">
+                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 320 512"><path d="M279.14 288l14.22-92.66h-88.91v-60.13c0-25.35 12.42-50.06 52.24-50.06h40.42V6.26S260.43 0 225.36 0c-73.22 0-121.08 44.38-121.08 124.72v70.62H22.89V288h81.39v224h100.17V288z"/></svg>
+                  </button>
+                  <button onClick={shareToTwitter} className="text-gray-400 hover:text-black transition" title="Share to X">
+                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 512 512"><path d="M389.2 48h70.6L305.6 224.2 487 464H345L233.6 318.6 106.5 464H35.8L200.7 275.5 26.8 48H172.4L272.9 180.9 389.2 48zM364.4 421.8h39.1L151.1 88h-42L364.4 421.8z"/></svg>
+                  </button>
+                  <button onClick={copyLink} className="text-gray-400 hover:text-gray-700 transition" title={locale === 'vi' ? 'Copy Link' : 'Copy Link'}>
+                    <Link2 size={16} />
+                  </button>
+                </div>
               </div>
 
-              <div className="bg-gray-50 border border-gray-200 rounded-xl p-5 mb-6 max-w-md space-y-3">
+              <div className="bg-gray-50 border border-gray-200 rounded-xl p-5 mb-4 max-w-md space-y-3">
                 {product.regular_price > 0 && (
                   <div className="flex justify-between items-center text-sm">
                     <span className="text-gray-500 font-medium">MSRP:</span>
@@ -165,11 +183,9 @@ export default function ProductViewClient({
                 )}
               </div>
 
-              {/* ĐÃ CẬP NHẬT: LOGIC NÚT BẤM DỰA VÀO PHIÊN ĐĂNG NHẬP */}
               <button 
                 onClick={() => {
                   if (session) {
-                    // NẾU ĐÃ ĐĂNG NHẬP: Thêm vào Giỏ hàng & Mở Cửa sổ trượt
                     addItem({
                       slug: product.slug,
                       title: product.title,
@@ -180,7 +196,6 @@ export default function ProductViewClient({
                     });
                     toggleCart(true);
                   } else {
-                    // NẾU CHƯA ĐĂNG NHẬP: Mở Popup Liên hệ như cũ
                     setIsModalOpen(true);
                   }
                 }}
@@ -197,13 +212,12 @@ export default function ProductViewClient({
                   </>
                 )}
               </button>
-
             </div>
 
-            <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
-              <h3 className="text-lg font-bold text-gray-900 mb-6">{t('docs_support')}</h3>
+            <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+              <h3 className="text-lg font-bold text-gray-900 mb-4">{t('docs_support')}</h3>
               
-              <div className="flex items-start gap-3 mb-6">
+              <div className="flex items-start gap-3 mb-4">
                 <ShieldCheck className="text-green-600 shrink-0 mt-0.5" size={20} />
                 <div>
                   <h4 className="text-sm font-bold text-gray-900">{t('warranty')}</h4>
@@ -216,7 +230,7 @@ export default function ProductViewClient({
                   href={product.datasheet_url} 
                   target="_blank" 
                   rel="noopener noreferrer"
-                  className="w-full flex items-center justify-between bg-blue-50 hover:bg-blue-100 border border-blue-200 text-blue-700 font-semibold py-3 px-4 rounded-lg transition-all text-sm mb-3"
+                  className="w-full flex items-center justify-between bg-blue-50 hover:bg-blue-100 border border-blue-200 text-blue-700 font-semibold py-3 px-4 rounded-lg transition-all text-sm"
                 >
                   <span className="flex items-center gap-2"><Download size={16} /> {t('download_datasheet')}</span>
                   <span className="text-xs font-bold">PDF</span>
@@ -225,8 +239,8 @@ export default function ProductViewClient({
             </div>
 
             {product.youtube_url && (
-              <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
-                <h3 className="text-lg font-bold text-gray-900 mb-6 flex items-center gap-2">
+              <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+                <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
                   <PlayCircle className="text-red-600" size={24} />
                   {locale === 'vi' ? 'Video Trải nghiệm' : 'Product Video'}
                 </h3>
@@ -244,8 +258,8 @@ export default function ProductViewClient({
             )}
 
             {product.content && (
-              <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
-                <h3 className="text-lg font-bold text-gray-900 mb-6 flex items-center gap-2">
+              <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+                <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
                   <FileText className="text-pem-orange" size={20} /> 
                   {locale === 'vi' ? 'Bài viết về sản phẩm' : 'Product Overview'}
                 </h3>
@@ -260,7 +274,7 @@ export default function ProductViewClient({
 
       </div>
 
-      {/* POPUP MODAL (CHO KHÁCH VÃNG LAI) */}
+      {/* POPUP MODAL */}
       {isModalOpen && !session && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
           <div className="bg-white rounded-2xl max-w-lg w-full p-6 md:p-8 shadow-2xl relative animate-in fade-in zoom-in duration-200">
