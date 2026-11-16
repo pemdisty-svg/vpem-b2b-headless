@@ -13,7 +13,7 @@ export default function VpemFooter() {
     address: "VPEM, Building 140B Nguyen Van Troi St, Ward Phu Nhuan, HCM City",
     hotline: "+84 969713680",
     email: "info@vpem.vn",
-    facebookLink: "http://facebook.comvpem.vn",
+    facebookLink: "https://www.messenger.com/t/vpem.vn/",
     zaloLink: "http://zalo.me/2113087889442587606"
   };
 
