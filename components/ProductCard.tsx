@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import Image from 'next/image'; // ĐÃ THÊM: Thư viện tối ưu ảnh của Next.js
 import { ShieldCheck, ArrowRight } from 'lucide-react';
 import { useTranslations, useLocale } from 'next-intl';
 import Link from 'next/link';
@@ -22,21 +23,33 @@ export interface ProductType {
 export default function ProductCard({ product }: { product: ProductType }) {
   const t = useTranslations('Products');
   const locale = useLocale();
-  const { data: session } = useSession(); // Lấy trạng thái đăng nhập
+  const { data: session } = useSession();
 
   return (
     <Link 
       href={`/${locale}/products/${product.slug}`}
       className="bg-white border border-gray-100 rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 flex flex-col overflow-hidden group cursor-pointer"
     >
-      <div className="relative w-full h-52 bg-white flex items-center justify-center p-4 border-b border-gray-50">
-        <img 
-          src={product.featured_image} 
-          alt={product.title} 
-          className="object-contain w-full h-full group-hover:scale-105 transition-transform duration-300"
-        />
+      <div className="relative w-full h-52 bg-white flex items-center justify-center border-b border-gray-50 overflow-hidden">
+        
+        {/* ĐÃ CẬP NHẬT: Dùng Image của Next.js, tự sửa link http và thêm referrerPolicy để lách tường lửa P.A Việt Nam */}
+        {product.featured_image ? (
+          <Image 
+            src={product.featured_image.replace('http://', 'https://')} 
+            alt={product.title}
+            fill
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
+            className="object-contain p-4 group-hover:scale-105 transition-transform duration-300 mix-blend-multiply"
+            referrerPolicy="no-referrer"
+          />
+        ) : (
+          <div className="text-xs text-gray-400">
+            {locale === 'vi' ? 'Chưa có ảnh' : 'No image'}
+          </div>
+        )}
+
         {product.rma_api_support && (
-          <div className="absolute top-3 right-3 bg-green-100 text-green-700 text-[10px] font-bold px-2 py-1 rounded-md flex items-center gap-1 shadow-sm">
+          <div className="absolute top-3 right-3 z-10 bg-green-100 text-green-700 text-[10px] font-bold px-2 py-1 rounded-md flex items-center gap-1 shadow-sm">
             <ShieldCheck size={12} /> {t('rma_ready')}
           </div>
         )}
@@ -64,7 +77,6 @@ export default function ProductCard({ product }: { product: ProductType }) {
               </span>
             )}
             
-            {/* Logic hiện giá B2B khi Đã Đăng Nhập */}
             {session && (
               <span className="text-lg font-extrabold text-pem-red">
                 {product.b2b_price && product.b2b_price > 0 ? `${product.b2b_price.toLocaleString('vi-VN')} đ` : (locale === 'vi' ? 'Liên hệ báo giá' : 'Contact for Quote')}

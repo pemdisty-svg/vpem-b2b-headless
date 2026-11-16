@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import Image from 'next/image'; // ĐÃ THÊM: Thư viện tối ưu ảnh của Next.js
 import { useTranslations } from 'next-intl';
 import { ShieldCheck, Download, CheckCircle, FileText, ChevronRight, X, Send, PlayCircle, ShoppingBag, Link2 } from 'lucide-react';
 import Link from 'next/link';
@@ -50,12 +51,12 @@ export default function ProductViewClient({
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   useEffect(() => {
-    if (product.gallery.length <= 1) return;
+    if (!product.gallery || product.gallery.length <= 1) return;
     const interval = setInterval(() => {
       setCurrentImageIndex((prev) => (prev + 1) % product.gallery.length);
     }, 3000);
     return () => clearInterval(interval);
-  }, [product.gallery.length]);
+  }, [product.gallery]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -90,20 +91,32 @@ export default function ProductViewClient({
           
           {/* CỘT TRÁI: SLIDER HÌNH ẢNH */}
           <div className="lg:col-span-5 lg:sticky lg:top-8 bg-white rounded-2xl p-6 border border-gray-100 shadow-sm flex flex-col items-center">
-            <div className="relative w-full aspect-square flex items-center justify-center mb-6">
-              <img 
-                src={product.gallery[currentImageIndex]} 
-                alt={product.title} 
-                className="object-contain w-full h-full mix-blend-multiply transition-opacity duration-500" 
-              />
+            
+            {/* ĐÃ CẬP NHẬT: Thay thẻ img bằng Image của Next.js, tự động chuyển đổi link sang https để tránh lỗi */}
+            <div className="relative w-full aspect-square flex items-center justify-center mb-6 bg-white overflow-hidden">
+              {product.gallery && product.gallery.length > 0 && product.gallery[currentImageIndex] ? (
+                <Image 
+                  src={product.gallery[currentImageIndex].replace('http://', 'https://')} 
+                  alt={product.title} 
+                  fill
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                  className="object-contain mix-blend-multiply transition-opacity duration-500 p-2" 
+                  priority
+                />
+              ) : (
+                <div className="w-full h-full flex items-center justify-center bg-gray-50 text-gray-400 text-sm">
+                  {locale === 'vi' ? 'Đang cập nhật hình ảnh' : 'Image updating...'}
+                </div>
+              )}
+              
               {product.rma_ready && (
-                <div className="absolute top-0 left-0 bg-green-100 text-green-700 text-xs font-bold px-3 py-1.5 rounded-md flex items-center gap-1.5 shadow-sm">
+                <div className="absolute top-0 left-0 z-10 bg-green-100 text-green-700 text-xs font-bold px-3 py-1.5 rounded-md flex items-center gap-1.5 shadow-sm">
                   <ShieldCheck size={16} /> {t('rma_support')}
                 </div>
               )}
             </div>
 
-            {product.gallery.length > 1 && (
+            {product.gallery && product.gallery.length > 1 && (
               <div className="flex gap-2 justify-center">
                 {product.gallery.map((_, idx) => (
                   <button
@@ -119,7 +132,7 @@ export default function ProductViewClient({
           </div>
 
           {/* CỘT PHẢI: NỘI DUNG SẢN PHẨM */}
-          <div className="lg:col-span-7 flex flex-col space-y-5">
+          <div className="lg:col-span-7 flex flex-col space-y-4">
             
             <div className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
               <div className="flex items-center gap-3 mb-4">
@@ -148,7 +161,6 @@ export default function ProductViewClient({
                   <span className="text-sm font-semibold text-blue-700">{product.stock_status}</span>
                 </div>
                 
-                {/* Cụm Share dùng SVG chuẩn */}
                 <div className="flex items-center gap-4">
                   <span className="text-xs text-gray-400 font-medium">{locale === 'vi' ? 'Chia sẻ:' : 'Share:'}</span>
                   <button onClick={shareToFacebook} className="text-gray-400 hover:text-blue-600 transition" title="Share to Facebook">
@@ -163,25 +175,28 @@ export default function ProductViewClient({
                 </div>
               </div>
 
-              <div className="bg-gray-50 border border-gray-200 rounded-xl p-5 mb-4 max-w-md space-y-3">
-                {product.regular_price > 0 && (
-                  <div className="flex justify-between items-center text-sm">
-                    <span className="text-gray-500 font-medium">MSRP:</span>
-                    <span className={`transition-all ${session ? 'text-gray-400 line-through text-xs' : 'text-gray-800 font-bold'}`}>
-                      {product.regular_price.toLocaleString('vi-VN')} đ
-                    </span>
-                  </div>
-                )}
-                
-                {session && (
-                  <div className="flex justify-between items-center border-t border-gray-200 pt-3">
-                    <span className="text-sm font-bold text-gray-900">{locale === 'vi' ? 'Giá Dự án B2B:' : 'B2B Project Price:'}</span>
-                    <span className="text-xl font-extrabold text-pem-red">
-                      {product.b2b_price > 0 ? `${product.b2b_price.toLocaleString('vi-VN')} đ` : (locale === 'vi' ? 'Liên hệ báo giá' : 'Contact for Quote')}
-                    </span>
-                  </div>
-                )}
-              </div>
+              {/* ĐÃ CẬP NHẬT: Khối hộp xám chỉ hiển thị nếu có giá tiền MSRP > 0 hoặc Khách đã Đăng nhập */}
+              {(product.regular_price > 0 || session) && (
+                <div className="bg-gray-50 border border-gray-200 rounded-xl p-5 mb-4 max-w-md space-y-3">
+                  {product.regular_price > 0 && (
+                    <div className="flex justify-between items-center text-sm">
+                      <span className="text-gray-500 font-medium">MSRP:</span>
+                      <span className={`transition-all ${session ? 'text-gray-400 line-through text-xs' : 'text-gray-800 font-bold'}`}>
+                        {product.regular_price.toLocaleString('vi-VN')} đ
+                      </span>
+                    </div>
+                  )}
+                  
+                  {session && (
+                    <div className="flex justify-between items-center border-t border-gray-200 pt-3">
+                      <span className="text-sm font-bold text-gray-900">{locale === 'vi' ? 'Giá Dự án B2B:' : 'B2B Project Price:'}</span>
+                      <span className="text-xl font-extrabold text-pem-red">
+                        {product.b2b_price > 0 ? `${product.b2b_price.toLocaleString('vi-VN')} đ` : (locale === 'vi' ? 'Liên hệ báo giá' : 'Contact for Quote')}
+                      </span>
+                    </div>
+                  )}
+                </div>
+              )}
 
               <button 
                 onClick={() => {

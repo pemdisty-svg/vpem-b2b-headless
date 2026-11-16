@@ -5,24 +5,29 @@ import createNextIntlPlugin from "next-intl/plugin";
 const withNextIntl = createNextIntlPlugin("./i18n.ts");
 
 const config: NextConfig = {
-  // Bật tính năng tối ưu hóa hình ảnh của Next.js
   images: {
+    // ĐÃ THÊM: Tắt tối ưu hóa qua server để trình duyệt load ảnh trực tiếp (Fix lỗi 403 Hosting)
+    unoptimized: true, 
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: 'data.vpem.vn', // Cho phép load ảnh từ kho WordPress của VPEM
+        hostname: 'data.vpem.vn',
         port: '',
         pathname: '/**',
       },
       {
         protocol: 'https',
-        hostname: 'placehold.co', // Cho phép load ảnh Mock demo
+        hostname: 'beta.vpem.vn',
+        port: '',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'placehold.co',
         port: '',
         pathname: '/**',
       }
     ],
-    // Tự động nén và chuyển đổi định dạng ảnh sang WebP/AVIF để tối ưu tốc độ
-    formats: ['image/avif', 'image/webp'],
   },
 };
 
