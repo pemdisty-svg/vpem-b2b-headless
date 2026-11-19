@@ -12,19 +12,19 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
       ? 'VPEM - Hệ sinh thái phân phối thiết bị công nghệ chính hãng hàng đầu.' 
       : 'VPEM - Leading genuine technology distribution ecosystem.',
   };
-}
+  }
 
 export default async function AboutPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
 
   // Dữ liệu Mock cho Logo Đối tác
   const partners = [
-    { name: 'MyTechSun', logo: 'https://placehold.co/150x60/f8fafc/1e293b?text=MyTechSun' },
-    { name: 'ViewSonic', logo: 'https://placehold.co/150x60/f8fafc/1e293b?text=ViewSonic' },
-    { name: 'Dell', logo: 'https://placehold.co/150x60/f8fafc/1e293b?text=Dell+EMC' },
-    { name: 'MSI', logo: 'https://placehold.co/150x60/f8fafc/1e293b?text=MSI' },
-    { name: 'HP', logo: 'https://placehold.co/150x60/f8fafc/1e293b?text=HP+Enterprise' },
-    { name: 'Philips', logo: 'https://placehold.co/150x60/f8fafc/1e293b?text=Philips' },
+    { name: 'MyTechSun', logo: '/partners/MYTECHSUN.png' },
+    { name: 'ViewSonic', logo: '/partners/Viewsonic.png' },
+    { name: 'Dell', logo: '/partners/Dell.png' },
+    { name: 'MSI', logo: '/partners/MSI.png' },
+    { name: 'HP', logo: '/partners/HP.png' },
+    { name: 'Dell Technologies ', logo: '/partners/Dell technologies.png' },
   ];
 
   return (
@@ -38,15 +38,15 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
             {locale === 'vi' ? 'Hồ sơ Năng lực' : 'Company Profile'}
           </div>
           <h1 className="text-4xl md:text-6xl font-extrabold text-white mb-6 leading-tight">
-            {locale === 'vi' ? 'Tiên phong kiến tạo' : 'Pioneering the'} <br />
+            {locale === 'vi' ? 'Tiên phong trong' : 'Pioneering the'} <br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-pem-orange to-yellow-400">
               {locale === 'vi' ? 'Hệ sinh thái Công nghệ' : 'Technology Ecosystem'}
             </span>
           </h1>
           <p className="text-gray-300 max-w-2xl mx-auto text-lg">
             {locale === 'vi' 
-              ? 'VPEM Corporation không chỉ là nhà phân phối, chúng tôi là đối tác chiến lược đồng hành cùng sự phát triển bền vững của doanh nghiệp bạn.' 
-              : 'VPEM Corporation is more than a distributor; we are a strategic partner accompanying your sustainable business growth.'}
+              ? 'VPEM VPEM là doanh nghiệp tại Việt Nam, với mong muốn mang đến những trải nghiệm thành công cho các doanh nghiệp và người tiêu dùng trong các lĩnh vực công nghệ. VPEM mong muốn là đơn vị đồng hành cùng doanh nghiệp và khách hàng trong quá trình kinh doanh và phát triển tại Việt Nam. VPEM không chỉ là một nhà phân phối; chúng tôi là đối tác chiến lược đồng hành cùng sự phát triển bền vững của doanh nghiệp bạn.' 
+              : 'VPEM is a Vietnam-based enterprise dedicated to delivering successful experiences to businesses and consumers within the technology sector. The company aspires to serve as a trusted partner, supporting businesses and clients throughout their operational and developmental journeys in Vietnam. VPEM is more than a distributor; we are a strategic partner accompanying your sustainable business growth.'}
           </p>
         </div>
       </section>
@@ -61,8 +61,12 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
             {/* Chạy 2 luồng giống hệt nhau để tạo cảm giác vô tận */}
             <div className="animate-marquee flex items-center gap-12 pr-12">
               {partners.concat(partners).map((partner, idx) => (
-                <div key={idx} className="flex-shrink-0 grayscale hover:grayscale-0 transition-all duration-300 opacity-70 hover:opacity-100 cursor-pointer">
-                  <img src={partner.logo} alt={partner.name} className="h-12 object-contain" />
+                <div key={idx} className="flex-shrink-0 transition-all duration-300 cursor-pointer group">
+                  <img 
+                    src={partner.logo} 
+                    alt={partner.name} 
+                    className="h-10 md:h-12 w-auto object-contain transition-transform duration-300 group-hover:scale-110" 
+                  />
                 </div>
               ))}
             </div>
@@ -81,8 +85,8 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
             <h3 className="text-3xl font-extrabold mb-4">{locale === 'vi' ? 'Sứ mệnh của VPEM' : 'Our Mission'}</h3>
             <p className="text-blue-100 leading-relaxed max-w-xl text-lg">
               {locale === 'vi' 
-                ? 'Tối ưu hóa chuỗi cung ứng thiết bị CNTT, mang đến cho đại lý và doanh nghiệp những sản phẩm chất lượng quốc tế với mức giá dự án cạnh tranh nhất, cùng dịch vụ hậu mãi chuẩn RMA toàn cầu.' 
-                : 'Optimizing the IT equipment supply chain, providing agencies and businesses with international quality products at the most competitive project prices.'}
+                ? 'Tối ưu hóa chuỗi cung ứng thiết bị CNTT, mang đến cho đại lý và doanh nghiệp những sản phẩm chất lượng quốc tế với mức giá dự án cạnh tranh nhất, cùng dịch vụ hậu mãi chuẩn RMA toàn cầu. Luôn mong muốn liên kết cùng các đối tác đếm đến các dịch vụ, giải pháp, hậu mãi tốt nhất cho thi trường Việt Nam.' 
+                : 'Optimizing the IT equipment supply chain, providing agencies and businesses with international quality products at the most competitive project prices. Already seeking to collaborate with partners to deliver the best services, solutions, and after-sales support to the Vietnamese market.'}
             </p>
           </div>
 
@@ -112,7 +116,7 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
             <ShieldCheck size={40} className="text-blue-600 mb-6" />
             <h3 className="text-2xl font-extrabold text-gray-900 mb-4">{locale === 'vi' ? 'Cam kết Chính hãng 100%' : '100% Genuine Commitment'}</h3>
             <p className="text-gray-600 leading-relaxed text-lg">
-              {locale === 'vi' ? 'Mọi sản phẩm phân phối bởi VPEM đều đầy đủ chứng từ CO/CQ, hóa đơn VAT và được bảo hành chính thức từ hãng. Đặc biệt hỗ trợ API RMA cho các đối tác tích hợp sâu.' : 'All products distributed by VPEM come with full CO/CQ documents, VAT invoices, and official warranty. We provide RMA API for deeply integrated partners.'}
+              {locale === 'vi' ? 'Mọi sản phẩm phân phối bởi VPEM đều đầy đủ chứng từ CO/CQ, hóa đơn VAT và được bảo hành chính thức từ hãng.' : 'All products distributed by VPEM come with full CO/CQ documents, VAT invoices, and official warranty.'}
             </p>
           </div>
 
@@ -135,7 +139,7 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
             <div className="h-48 bg-gray-100 relative overflow-hidden flex items-center justify-center">
               <Monitor size={64} className="text-gray-300 group-hover:scale-110 transition-transform duration-500" />
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-              <h3 className="absolute bottom-4 left-6 text-white font-extrabold text-xl">Màn hình AI MyTechSun</h3>
+              <h3 className="absolute bottom-4 left-6 text-white font-extrabold text-xl">Monitor MyTechSun</h3>
             </div>
             <div className="p-6 flex justify-between items-center bg-white">
               <p className="text-gray-500 text-sm font-semibold">{locale === 'vi' ? 'Khám phá ngay' : 'Explore now'}</p>
@@ -161,7 +165,7 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
             <div className="h-48 bg-gray-100 relative overflow-hidden flex items-center justify-center">
               <Server size={64} className="text-gray-300 group-hover:scale-110 transition-transform duration-500" />
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-              <h3 className="absolute bottom-4 left-6 text-white font-extrabold text-xl">Năng lượng & Lưu trữ</h3>
+              <h3 className="absolute bottom-4 left-6 text-white font-extrabold text-xl">AI Servers</h3>
             </div>
             <div className="p-6 flex justify-between items-center bg-white">
               <p className="text-gray-500 text-sm font-semibold">{locale === 'vi' ? 'Giải pháp bền vững' : 'Sustainable energy'}</p>

@@ -1,8 +1,6 @@
 import React from 'react';
 import { ShieldCheck, Truck, RefreshCw, Laptop, Monitor, HardDrive, Headphones, Camera, ArrowRight } from 'lucide-react';
 import { getTranslations } from 'next-intl/server';
-
-// ĐÃ THÊM: Import Link để điều hướng và Metadata để làm SEO
 import Link from 'next/link';
 import { Metadata } from 'next';
 
@@ -17,7 +15,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   };
 }
 
-// 2. GIAO DIỆN CHÍNH (Đã bọc Link)
+// 2. GIAO DIỆN CHÍNH
 export default async function VpemHomepage({ 
   params 
 }: { 
@@ -26,7 +24,6 @@ export default async function VpemHomepage({
   const { locale } = await params;
   const t = await getTranslations('Homepage');
 
-  // ĐÃ THÊM: Tích hợp thuộc tính 'link' để khi bấm vào từng danh mục sẽ ra đúng trang sản phẩm
   const categories = [
     { name: t('cat_laptop'), icon: <Laptop size={32} />, brands: 'Dell, MSI, HP', link: `/${locale}/products?brand=laptop-pc` },
     { name: t('cat_pc'), icon: <HardDrive size={32} />, brands: 'Dell Optiplex, MSI', link: `/${locale}/products?brand=laptop-pc` },
@@ -38,25 +35,33 @@ export default async function VpemHomepage({
   return (
     <div className="w-full flex flex-col font-sans">
       
-      <section className="relative w-full h-screen min-h-[600px] flex items-center px-4">
-        <div className="absolute inset-0 bg-gradient-to-r from-blue-900 via-blue-800 to-orange-500 opacity-90 z-0"></div>
+      {/* HERO SECTION: Nền homepage.webp, nội dung thu gọn & căn giữa ở phía dưới */}
+      <section className="relative w-full min-h-[500px] md:min-h-[600px] flex items-end justify-center px-4 pb-10 md:pb-12 pt-28 overflow-hidden bg-slate-900">
+        {/* Ảnh nền từ public/pic/homepage.webp */}
+        <img
+          src="/pic/homepage.webp"
+          alt="VPEM - Leading Technology Distributor"
+          className="absolute inset-0 w-full h-full object-cover object-center z-0 pointer-events-none"
+        />
+        {/* Lớp phủ tối nhẹ từ dưới lên để làm nổi chữ ở đáy mà không che mờ ảnh phía trên */}
+        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-slate-950/35 to-transparent z-10 pointer-events-none"></div>
         
-        <div className="max-w-7xl mx-auto w-full relative z-10 text-white mt-16">
-          <h2 className="text-xl md:text-2xl font-semibold mb-4">{t('hero_subtitle')}</h2>
-          <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight mb-8 leading-tight max-w-3xl">
-            {t('hero_title_1')} <br/>
-            {t('hero_title_2')}
+        <div className="max-w-4xl mx-auto w-full relative z-20 text-white text-center flex flex-col items-center">
+          <h2 className="text-xs md:text-base font-semibold tracking-wider uppercase text-orange-300 mb-1.5 drop-shadow">
+            {t('hero_subtitle')}
+          </h2>
+          <h1 className="text-2xl md:text-4xl font-extrabold tracking-tight mb-5 leading-snug drop-shadow-md">
+            {t('hero_title_1')} — {t('hero_title_2')}
           </h1>
           
-          {/* ĐÃ CẬP NHẬT: Thay <button> bằng <Link> để điều hướng thực tế */}
           <Link 
-            href={`/${locale}/about`}
-            className="inline-block bg-orange-500 hover:bg-orange-600 text-white font-bold py-4 px-10 rounded-md transition-all text-center"
+            href={`/${locale}/services`}
+            className="relative z-30 pointer-events-auto cursor-pointer inline-block bg-orange-500 hover:bg-orange-400 hover:brightness-110 hover:scale-[1.03] active:scale-95 text-white font-bold text-sm md:text-base py-3 px-8 rounded-md transition-all duration-200 text-center shadow-lg hover:shadow-orange-400/50"
           >
             {t('hero_btn')}
           </Link>
         </div>
-      </section>  
+      </section>
 
       <section className="w-full bg-white border-b border-gray-100 py-8 px-4">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
@@ -91,7 +96,6 @@ export default async function VpemHomepage({
               <h2 className="text-3xl font-extrabold text-gray-900 mb-2">{t('cat_section_title')}</h2>
               <p className="text-gray-500">{t('cat_section_desc')}</p>
             </div>
-            {/* ĐÃ CẬP NHẬT: Bọc thẻ <a> bằng thẻ <Link> của Next.js */}
             <Link href={`/${locale}/products`} className="hidden md:flex items-center gap-1 text-green-600 font-bold hover:underline">
               {t('cat_view_all')} <ArrowRight size={16} />
             </Link>
