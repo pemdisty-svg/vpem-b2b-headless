@@ -19,12 +19,12 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
 
   // Dữ liệu Mock cho Logo Đối tác
   const partners = [
-    { name: 'MyTechSun', logo: '/partners/MYTECHSUN.png' },
-    { name: 'ViewSonic', logo: '/partners/Viewsonic.png' },
-    { name: 'Dell', logo: '/partners/Dell.png' },
-    { name: 'MSI', logo: '/partners/MSI.png' },
-    { name: 'HP', logo: '/partners/HP.png' },
-    { name: 'Dell Technologies ', logo: '/partners/Dell technologies.png' },
+    { name: 'MyTechSun', logo: '/partners/mytechsun.png' },
+    { name: 'ViewSonic', logo: '/partners/viewsonic.png' },
+    { name: 'Dell', logo: '/partners/dell.png' },
+    { name: 'MSI', logo: '/partners/msi.png' },
+    { name: 'HP', logo: '/partners/hp.png' },
+    { name: 'Dell Technologies ', logo: '/partners/dell-technologies.png' },
   ];
 
   return (
