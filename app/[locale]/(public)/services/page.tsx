@@ -77,13 +77,13 @@ export default async function ServicesPage({
         : 'Providing solutions and a commitment to partnership:',
       bullets: isVi
         ? [
-            'Dịch vụ bảo hành chính hãng MSI I DELL',
+            'Dịch vụ bảo hành chính hãng',
             'Dịch vụ & giải pháp chuyển đổi số',
             'Quản trị doanh nghiệp',
             'Cam kết Cộng sự, Khách hàng, Cộng đồng, Đối tác',
           ]
         : [
-            'Official warranty service MSI I DELL',
+            'Official warranty service',
             'Digital transformation services & solutions',
             'Business management',
             'Commitment to associates, clients, the community, and partners',

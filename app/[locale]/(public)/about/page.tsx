@@ -1,30 +1,51 @@
 import React from 'react';
 import { Metadata } from 'next';
-import Image from 'next/image';
 import Link from 'next/link';
-import { ArrowRight, Target, Zap, Globe2, ShieldCheck, Monitor, Laptop, Server } from 'lucide-react';
+import { ArrowRight, Target, Zap, Globe2, ShieldCheck } from 'lucide-react';
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params;
   return {
     title: locale === 'vi' ? 'Về VPEM Corporation' : 'About VPEM Corporation',
-    description: locale === 'vi' 
-      ? 'VPEM - Hệ sinh thái phân phối thiết bị công nghệ chính hãng hàng đầu.' 
+    description: locale === 'vi'
+      ? 'VPEM - Hệ sinh thái phân phối thiết bị công nghệ chính hãng hàng đầu.'
       : 'VPEM - Leading genuine technology distribution ecosystem.',
   };
-  }
+}
 
 export default async function AboutPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
 
-  // Dữ liệu Mock cho Logo Đối tác
+  // Dữ liệu Logo Đối tác
   const partners = [
     { name: 'MyTechSun', logo: '/partners/mytechsun.png' },
     { name: 'ViewSonic', logo: '/partners/viewsonic.png' },
     { name: 'Dell', logo: '/partners/dell.png' },
     { name: 'MSI', logo: '/partners/msi.png' },
     { name: 'HP', logo: '/partners/hp.png' },
-    { name: 'Dell Technologies ', logo: '/partners/dell-technologies.png' },
+    { name: 'Dell Technologies', logo: '/partners/dell-technologies.png' },
+  ];
+
+  // Dữ liệu 3 Giải pháp Công nghệ Trọng điểm (ảnh lưu trực tiếp tại thư mục public/)
+  const keySolutions = [
+    {
+      title: 'Monitor MyTechSun',
+      subtitle: locale === 'vi' ? 'Khám phá ngay' : 'Explore now',
+      href: `/${locale}/products?brand=MYTECHSUN`,
+      image: '/pic/keytech_1.webp',
+    },
+    {
+      title: 'Laptop & Workstation',
+      subtitle: locale === 'vi' ? 'Giải pháp doanh nghiệp' : 'Enterprise solutions',
+      href: `/${locale}/products?brand=laptop-pc`,
+      image: '/pic/keytech_2.webp',
+    },
+    {
+      title: 'AI Servers',
+      subtitle: locale === 'vi' ? 'Giải pháp bền vững' : 'Sustainable energy',
+      href: `/${locale}/products?brand=LITHIUM`,
+      image: '/pic/keytech_31.webp',
+    },
   ];
 
   return (
@@ -44,8 +65,8 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
             </span>
           </h1>
           <p className="text-gray-300 max-w-2xl mx-auto text-lg">
-            {locale === 'vi' 
-              ? 'VPEM VPEM là doanh nghiệp tại Việt Nam, với mong muốn mang đến những trải nghiệm thành công cho các doanh nghiệp và người tiêu dùng trong các lĩnh vực công nghệ. VPEM mong muốn là đơn vị đồng hành cùng doanh nghiệp và khách hàng trong quá trình kinh doanh và phát triển tại Việt Nam. VPEM không chỉ là một nhà phân phối; chúng tôi là đối tác chiến lược đồng hành cùng sự phát triển bền vững của doanh nghiệp bạn.' 
+            {locale === 'vi'
+              ? 'VPEM là doanh nghiệp tại Việt Nam, với mong muốn mang đến những trải nghiệm thành công cho các doanh nghiệp và người tiêu dùng trong các lĩnh vực công nghệ. VPEM mong muốn là đơn vị đồng hành cùng doanh nghiệp và khách hàng trong quá trình kinh doanh và phát triển tại Việt Nam. VPEM không chỉ là một nhà phân phối; chúng tôi là đối tác chiến lược đồng hành cùng sự phát triển bền vững của doanh nghiệp bạn.'
               : 'VPEM is a Vietnam-based enterprise dedicated to delivering successful experiences to businesses and consumers within the technology sector. The company aspires to serve as a trusted partner, supporting businesses and clients throughout their operational and developmental journeys in Vietnam. VPEM is more than a distributor; we are a strategic partner accompanying your sustainable business growth.'}
           </p>
         </div>
@@ -62,10 +83,10 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
             <div className="animate-marquee flex items-center gap-12 pr-12">
               {partners.concat(partners).map((partner, idx) => (
                 <div key={idx} className="flex-shrink-0 transition-all duration-300 cursor-pointer group">
-                  <img 
-                    src={partner.logo} 
-                    alt={partner.name} 
-                    className="h-10 md:h-12 w-auto object-contain transition-transform duration-300 group-hover:scale-110" 
+                  <img
+                    src={partner.logo}
+                    alt={partner.name}
+                    className="h-10 md:h-12 w-auto object-contain transition-transform duration-300 group-hover:scale-110"
                   />
                 </div>
               ))}
@@ -84,8 +105,8 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
             <Target size={40} className="text-pem-orange mb-6" />
             <h3 className="text-3xl font-extrabold mb-4">{locale === 'vi' ? 'Sứ mệnh của VPEM' : 'Our Mission'}</h3>
             <p className="text-blue-100 leading-relaxed max-w-xl text-lg">
-              {locale === 'vi' 
-                ? 'Tối ưu hóa chuỗi cung ứng thiết bị CNTT, mang đến cho đại lý và doanh nghiệp những sản phẩm chất lượng quốc tế với mức giá dự án cạnh tranh nhất, cùng dịch vụ hậu mãi chuẩn RMA toàn cầu. Luôn mong muốn liên kết cùng các đối tác đếm đến các dịch vụ, giải pháp, hậu mãi tốt nhất cho thi trường Việt Nam.' 
+              {locale === 'vi'
+                ? 'Tối ưu hóa chuỗi cung ứng thiết bị CNTT, mang đến cho đại lý và doanh nghiệp những sản phẩm chất lượng quốc tế với mức giá dự án cạnh tranh nhất, cùng dịch vụ hậu mãi chuẩn RMA toàn cầu. Luôn mong muốn liên kết cùng các đối tác đem đến các dịch vụ, giải pháp, hậu mãi tốt nhất cho thị trường Việt Nam.'
                 : 'Optimizing the IT equipment supply chain, providing agencies and businesses with international quality products at the most competitive project prices. Already seeking to collaborate with partners to deliver the best services, solutions, and after-sales support to the Vietnamese market.'}
             </p>
           </div>
@@ -127,52 +148,39 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
       <section className="max-w-7xl mx-auto px-4 md:px-8 mb-12">
         <div className="flex justify-between items-end mb-8">
           <div>
-            <h2 className="text-3xl font-extrabold text-gray-900 mb-2">{locale === 'vi' ? 'Giải pháp Công nghệ Trọng điểm' : 'Key Technology Solutions'}</h2>
-            <p className="text-gray-500">{locale === 'vi' ? 'Khám phá các dòng sản phẩm chiến lược tại VPEM' : 'Explore strategic product lines at VPEM'}</p>
+            <h2 className="text-3xl font-extrabold text-gray-900 mb-2">
+              {locale === 'vi' ? 'Giải pháp Công nghệ Trọng điểm' : 'Key Technology Solutions'}
+            </h2>
+            <p className="text-gray-500">
+              {locale === 'vi' ? 'Khám phá các dòng sản phẩm chiến lược tại VPEM' : 'Explore strategic product lines at VPEM'}
+            </p>
           </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          
-          {/* Card Màn hình */}
-          <Link href={`/${locale}/products?brand=MYTECHSUN`} className="group block bg-white rounded-3xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300">
-            <div className="h-48 bg-gray-100 relative overflow-hidden flex items-center justify-center">
-              <Monitor size={64} className="text-gray-300 group-hover:scale-110 transition-transform duration-500" />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-              <h3 className="absolute bottom-4 left-6 text-white font-extrabold text-xl">Monitor MyTechSun</h3>
-            </div>
-            <div className="p-6 flex justify-between items-center bg-white">
-              <p className="text-gray-500 text-sm font-semibold">{locale === 'vi' ? 'Khám phá ngay' : 'Explore now'}</p>
-              <ArrowRight className="text-pem-orange group-hover:translate-x-2 transition-transform" size={20} />
-            </div>
-          </Link>
-
-          {/* Card Laptop/PC */}
-          <Link href={`/${locale}/products?brand=laptop-pc`} className="group block bg-white rounded-3xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300">
-            <div className="h-48 bg-gray-100 relative overflow-hidden flex items-center justify-center">
-              <Laptop size={64} className="text-gray-300 group-hover:scale-110 transition-transform duration-500" />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-              <h3 className="absolute bottom-4 left-6 text-white font-extrabold text-xl">Laptop & Workstation</h3>
-            </div>
-            <div className="p-6 flex justify-between items-center bg-white">
-              <p className="text-gray-500 text-sm font-semibold">{locale === 'vi' ? 'Giải pháp doanh nghiệp' : 'Enterprise solutions'}</p>
-              <ArrowRight className="text-pem-orange group-hover:translate-x-2 transition-transform" size={20} />
-            </div>
-          </Link>
-
-          {/* Card Lưu trữ/Pin */}
-          <Link href={`/${locale}/products?brand=LITHIUM`} className="group block bg-white rounded-3xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300">
-            <div className="h-48 bg-gray-100 relative overflow-hidden flex items-center justify-center">
-              <Server size={64} className="text-gray-300 group-hover:scale-110 transition-transform duration-500" />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-              <h3 className="absolute bottom-4 left-6 text-white font-extrabold text-xl">AI Servers</h3>
-            </div>
-            <div className="p-6 flex justify-between items-center bg-white">
-              <p className="text-gray-500 text-sm font-semibold">{locale === 'vi' ? 'Giải pháp bền vững' : 'Sustainable energy'}</p>
-              <ArrowRight className="text-pem-orange group-hover:translate-x-2 transition-transform" size={20} />
-            </div>
-          </Link>
-
+          {keySolutions.map((item, idx) => (
+            <Link
+              key={idx}
+              href={item.href}
+              className="group block bg-white rounded-3xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300"
+            >
+              <div className="h-48 bg-gray-900 relative overflow-hidden">
+                <img
+                  src={item.image}
+                  alt={item.title}
+                  className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/25 to-transparent pointer-events-none"></div>
+                <h3 className="absolute bottom-4 left-6 z-10 text-white font-extrabold text-xl drop-shadow">
+                  {item.title}
+                </h3>
+              </div>
+              <div className="p-6 flex justify-between items-center bg-white">
+                <p className="text-gray-500 text-sm font-semibold">{item.subtitle}</p>
+                <ArrowRight className="text-pem-orange group-hover:translate-x-2 transition-transform" size={20} />
+              </div>
+            </Link>
+          ))}
         </div>
       </section>
 
