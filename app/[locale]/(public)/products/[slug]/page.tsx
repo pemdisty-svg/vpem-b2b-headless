@@ -1,8 +1,10 @@
 import React from 'react';
 import { notFound } from 'next/navigation';
-import { fetchGraphQL } from './../../../../../lib/api'; 
+import { fetchGraphQL } from './../../../../../lib/api';
 import ProductViewClient from './ProductViewClient';
 import { Metadata } from 'next';
+
+export const dynamic = 'force-dynamic';
 
 const GET_PRODUCT_AND_RELATED = `
   query GetProductAndRelated($id: ID!) {
@@ -13,6 +15,12 @@ const GET_PRODUCT_AND_RELATED = `
       featuredImage {
         node {
           sourceUrl
+        }
+      }
+      productBrands {
+        nodes {
+          name
+          slug
         }
       }
       productData {
@@ -35,13 +43,19 @@ const GET_PRODUCT_AND_RELATED = `
         productImage3 { node { sourceUrl } }
       }
     }
-    vpemProducts(first: 50) {
+    vpemProducts(first: 100) {
       nodes {
         title
         slug
         featuredImage {
           node {
             sourceUrl
+          }
+        }
+        productBrands {
+          nodes {
+            name
+            slug
           }
         }
         productData {
@@ -57,9 +71,13 @@ const GET_PRODUCT_AND_RELATED = `
 `;
 
 // HÀM TẠO METADATA ĐỘNG TỪ GRAPHQL
-export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
   const { slug } = await params;
-  const data = await fetchGraphQL(GET_PRODUCT_AND_RELATED, { id: slug });
+  const data = await fetchGraphQL(GET_PRODUCT_AND_RELATED, { id: slug }, 0);
   const product = data?.vpemProduct;
 
   if (!product) {
@@ -88,13 +106,13 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 }
 
 export default async function ProductDetailPage({
-  params
+  params,
 }: {
-  params: Promise<{ locale: string, slug: string }>
+  params: Promise<{ locale: string; slug: string }>;
 }) {
   const { locale, slug } = await params;
-  
-  const data = await fetchGraphQL(GET_PRODUCT_AND_RELATED, { id: slug });
+
+  const data = await fetchGraphQL(GET_PRODUCT_AND_RELATED, { id: slug }, 0);
   const fetchedProduct = data?.vpemProduct;
   const allProducts = data?.vpemProducts?.nodes || [];
 
@@ -102,17 +120,21 @@ export default async function ProductDetailPage({
     notFound();
   }
 
-  const { title, productData, content, featuredImage } = fetchedProduct;
+  const { title, productData, content, featuredImage, productBrands } = fetchedProduct;
 
   const rawGallery = [
     featuredImage?.node?.sourceUrl,
     productData?.productImage1?.node?.sourceUrl,
     productData?.productImage2?.node?.sourceUrl,
-    productData?.productImage3?.node?.sourceUrl
+    productData?.productImage3?.node?.sourceUrl,
   ].filter(Boolean);
 
-  const gallery = rawGallery.length > 0 ? rawGallery : ['https://placehold.co/600x400?text=No+Image'];
-  const currentBrand = productData?.productBrand || 'VPEM';
+  const gallery =
+    rawGallery.length > 0 ? rawGallery : ['https://placehold.co/600x400?text=No+Image'];
+
+  // Ưu tiên lấy Thương hiệu từ Taxonomy WordPress, nếu chưa tích mới lùi về ACF hoặc 'VPEM'
+  const currentBrand =
+    productBrands?.nodes?.[0]?.name || productData?.productBrand?.trim() || 'VPEM';
 
   let mappedStockStatus = productData?.stockStatus || 'Liên hệ';
   if (locale === 'en') {
@@ -126,29 +148,40 @@ export default async function ProductDetailPage({
   const displayContent = content;
 
   const product = {
-    title: title, 
+    title: title,
     slug: slug,
     sku: productData?.productSku || 'Đang cập nhật',
-    brand: currentBrand, 
+    brand: currentBrand,
     regular_price: Number(productData?.regularPrice) || 0,
     b2b_price: Number(productData?.b2bPrice) || 0,
     stock_status: mappedStockStatus,
-    rma_ready: productData?.rmaApiSupport === true, 
-    warranty: productData?.warrantyPeriod ? `${productData.warrantyPeriod} ${locale === 'vi' ? 'Tháng' : 'Months'}` : (locale === 'vi' ? 'Tiêu chuẩn' : 'Standard'),
+    rma_ready: productData?.rmaApiSupport === true,
+    warranty: productData?.warrantyPeriod
+      ? `${productData.warrantyPeriod} ${locale === 'vi' ? 'Tháng' : 'Months'}`
+      : locale === 'vi'
+      ? 'Tiêu chuẩn'
+      : 'Standard',
     datasheet_url: productData?.datasheetPdf?.node?.mediaItemUrl || null,
     gallery: gallery,
-    content: displayContent || '', 
-    tech_specs: productData?.techSpecs || '', 
-    youtube_url: productData?.youtubeUrl || null, 
+    content: displayContent || '',
+    tech_specs: productData?.techSpecs || '',
+    youtube_url: productData?.youtubeUrl || null,
   };
 
   const relatedProducts = allProducts
-    .filter((p: any) => p.productData?.productBrand === currentBrand && p.slug !== slug)
+    .filter((p: any) => {
+      const pBrand =
+        p.productBrands?.nodes?.[0]?.name || p.productData?.productBrand?.trim() || 'VPEM';
+      return pBrand.toLowerCase() === currentBrand.toLowerCase() && p.slug !== slug;
+    })
     .slice(0, 4)
     .map((p: any) => {
       let rStock = p.productData?.stockStatus || 'Liên hệ';
       if (locale === 'en') {
-        rStock = (rStock.includes('Sẵn kho') || rStock.toLowerCase().includes('sẵn')) ? 'In Stock' : 'Contact Us';
+        rStock =
+          rStock.includes('Sẵn kho') || rStock.toLowerCase().includes('sẵn')
+            ? 'In Stock'
+            : 'Contact Us';
       }
       return {
         title: p.title,
@@ -156,8 +189,8 @@ export default async function ProductDetailPage({
         image: p.featuredImage?.node?.sourceUrl || 'https://placehold.co/600x400?text=No+Image',
         sku: p.productData?.productSku || '',
         price: Number(p.productData?.regularPrice) || 0,
-        b2b_price: Number(p.productData?.b2bPrice) || 0, 
-        status: rStock
+        b2b_price: Number(p.productData?.b2bPrice) || 0,
+        status: rStock,
       };
     });
 
