@@ -15,6 +15,7 @@ const GET_ALL_POSTS_QUERY = `
         date
         isSticky
         excerpt
+        postLanguage
         featuredImage {
           node {
             sourceUrl
@@ -42,6 +43,7 @@ interface WPPost {
   date: string;
   isSticky?: boolean;
   excerpt?: string;
+  postLanguage?: string;
   featuredImage?: {
     node?: {
       sourceUrl?: string;
@@ -111,12 +113,18 @@ export default async function BlogPage({
   const { locale } = await params;
   const { section } = await searchParams;
   const isVi = locale === 'vi';
+  const targetLang = locale.toLowerCase();
 
   const listData = await fetchGraphQL(GET_ALL_POSTS_QUERY, {}, 0);
   const rawPosts: WPPost[] = listData?.posts?.nodes || [];
 
+  // Lọc bài viết khớp với ngôn ngữ hiện tại (vi hoặc en)
+  const localizedPosts = rawPosts.filter(
+    (p) => (p.postLanguage || 'vi').toLowerCase() === targetLang
+  );
+
   // Ưu tiên bài Ghim (isSticky) lên đầu, sau đó xếp theo ngày đăng mới nhất
-  const sortedPosts = [...rawPosts].sort((a, b) => {
+  const sortedPosts = [...localizedPosts].sort((a, b) => {
     if (Boolean(a.isSticky) !== Boolean(b.isSticky)) {
       return a.isSticky ? -1 : 1;
     }

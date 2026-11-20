@@ -1,7 +1,7 @@
 import React from 'react';
 import { Metadata } from 'next';
 import Link from 'next/link';
-import { notFound } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
 import { ArrowLeft, Calendar, Tag } from 'lucide-react';
 import { fetchGraphQL } from '../../../../../lib/api';
 
@@ -15,6 +15,8 @@ const GET_POST_DETAIL_AND_RELATED = `
       date
       excerpt
       content
+      postLanguage
+      translationSlugs
       featuredImage {
         node {
           sourceUrl
@@ -27,11 +29,12 @@ const GET_POST_DETAIL_AND_RELATED = `
         }
       }
     }
-    posts(first: 10) {
+    posts(first: 30) {
       nodes {
         title
         slug
         date
+        postLanguage
         featuredImage {
           node {
             sourceUrl
@@ -53,6 +56,8 @@ interface WPPostDetail {
   date: string;
   excerpt?: string;
   content?: string;
+  postLanguage?: string;
+  translationSlugs?: string;
   featuredImage?: {
     node?: {
       sourceUrl?: string;
@@ -97,7 +102,6 @@ function getSafeImageUrl(url?: string, fallbackText: string = 'VPEM News'): stri
   return url.replace('http://', 'https://');
 }
 
-// Tạo Metadata chuẩn SEO & OpenGraph cho từng bài viết
 export async function generateMetadata({
   params,
 }: {
@@ -152,6 +156,7 @@ export default async function BlogDetailPage({
 }) {
   const { locale, slug } = await params;
   const isVi = locale === 'vi';
+  const targetLang = locale.toLowerCase();
   const decodedSlug = decodeURIComponent(slug);
 
   const data = await fetchGraphQL(GET_POST_DETAIL_AND_RELATED, { slug: decodedSlug }, 0);
@@ -162,8 +167,28 @@ export default async function BlogDetailPage({
     notFound();
   }
 
+  // Nếu người dùng bấm đổi ngôn ngữ VN/EN khi đang đọc bài -> tự chuyển sang bài dịch tương ứng
+  const postLang = (singlePost.postLanguage || 'vi').toLowerCase();
+  if (postLang !== targetLang && singlePost.translationSlugs) {
+    let translatedSlug: string | undefined;
+    try {
+      const parsed: Record<string, string> = JSON.parse(singlePost.translationSlugs);
+      translatedSlug = parsed[targetLang];
+    } catch {
+      translatedSlug = undefined;
+    }
+
+    if (translatedSlug && translatedSlug !== singlePost.slug) {
+      redirect(`/${locale}/blog/${encodeURIComponent(translatedSlug)}`);
+    }
+  }
+
   const relatedPosts = recentPosts
-    .filter((p) => p.slug !== singlePost.slug)
+    .filter(
+      (p) =>
+        p.slug !== singlePost.slug &&
+        (p.postLanguage || 'vi').toLowerCase() === targetLang
+    )
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
     .slice(0, 3);
 
@@ -175,7 +200,6 @@ export default async function BlogDetailPage({
   return (
     <div className="w-full bg-white font-sans py-10 md:py-14">
       <div className="max-w-4xl mx-auto px-4 md:px-8">
-        {/* Nút quay lại */}
         <div className="mb-6">
           <Link
             href={`/${locale}/blog`}
@@ -186,7 +210,6 @@ export default async function BlogDetailPage({
           </Link>
         </div>
 
-        {/* Danh mục & ngày đăng */}
         <div className="flex flex-wrap items-center gap-3 text-xs text-gray-500 mb-4">
           {singlePost.categories?.nodes?.map((cat) => (
             <span
@@ -201,12 +224,10 @@ export default async function BlogDetailPage({
           </span>
         </div>
 
-        {/* Tiêu đề bài viết */}
         <h1 className="text-2xl md:text-4xl font-extrabold text-gray-900 leading-tight mb-6">
           {singlePost.title}
         </h1>
 
-        {/* Ảnh đại diện */}
         {singlePost.featuredImage?.node?.sourceUrl && (
           <div className="rounded-2xl overflow-hidden mb-8 border border-gray-100">
             <img
@@ -218,13 +239,11 @@ export default async function BlogDetailPage({
           </div>
         )}
 
-        {/* Nội dung bài viết từ WordPress */}
         <div
           className="text-gray-700 leading-relaxed text-base space-y-4 [&_h2]:text-2xl [&_h2]:font-bold [&_h2]:text-gray-900 [&_h2]:mt-8 [&_h2]:mb-3 [&_h3]:text-xl [&_h3]:font-bold [&_h3]:text-gray-900 [&_h3]:mt-6 [&_h3]:mb-2 [&_p]:mb-4 [&_ul]:list-disc [&_ul]:pl-6 [&_ul]:space-y-2 [&_ol]:list-decimal [&_ol]:pl-6 [&_ol]:space-y-2 [&_img]:rounded-xl [&_img]:my-6 [&_img]:max-w-full [&_img]:h-auto [&_a]:text-pem-orange [&_a]:underline [&_blockquote]:border-l-4 [&_blockquote]:border-pem-orange [&_blockquote]:pl-4 [&_blockquote]:italic [&_blockquote]:text-gray-600"
           dangerouslySetInnerHTML={{ __html: cleanedContent }}
         />
 
-        {/* Tin tức liên quan */}
         {relatedPosts.length > 0 && (
           <div className="mt-14 pt-10 border-t border-gray-200">
             <h2 className="text-xl font-extrabold text-gray-900 uppercase mb-6">
